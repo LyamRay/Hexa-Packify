@@ -20,10 +20,10 @@ public class StructureHandler extends AbstractPackHandler {
 
     public StructureHandler(JavaPlugin plugin, PackifyConfig config) {
         super(plugin, config);
-        this.packRoot      = new File(plugin.getDataFolder(), "texturepack");
-        File assets        = new File(packRoot, "assets/minecraft");
-        this.itemsFolder   = new File(assets, "items/item/paper");
-        this.modelsFolder  = new File(assets, "models/item/paper");
+        this.packRoot = new File(plugin.getDataFolder(), "texturepack");
+        File assets = new File(packRoot, "assets/minecraft");
+        this.itemsFolder = new File(assets, "items/item/paper");
+        this.modelsFolder = new File(assets, "models/item/paper");
         this.texturesFolder = new File(assets, "textures/item/paper");
     }
 
