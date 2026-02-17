@@ -1,41 +1,49 @@
 plugins {
-    id 'java-library'
+    id 'java'
+    id("xyz.jpenilla.run-paper") version "2.3.1"
+    id("com.gradleup.shadow") version "9.3.0"
     id 'maven-publish'
-    id 'com.gradleup.shadow' version '9.3.0'
 }
 
 group = 'me.lyamray'
-version = '1.0.0'
-
-java {
-    toolchain {
-        languageVersion = JavaLanguageVersion.of(21)
-    }
-    withSourcesJar()
-    withJavadocJar()
-}
 
 repositories {
     mavenCentral()
-    maven {
-        name = "papermc-repo"
-        url = uri("https://repo.papermc.io/repository/maven-public/")
-    }
+    maven { name = "papermc-repo"; url = uri("https://repo.papermc.io/repository/maven-public/") }
 }
 
 dependencies {
+    // Paper
     compileOnly("io.papermc.paper:paper-api:1.21-R0.1-SNAPSHOT")
 
+    // HTTP + JSON
     implementation("com.squareup.okhttp3:okhttp:4.11.0")
     implementation("org.json:json:20230227")
 
+    // Lombok
     compileOnly("org.projectlombok:lombok:1.18.30")
     annotationProcessor("org.projectlombok:lombok:1.18.30")
 }
 
+tasks {
+    runServer {
+        minecraftVersion("1.21")
+    }
+}
+
+def targetJavaVersion = 21
+
+java {
+    toolchain.languageVersion = JavaLanguageVersion.of(targetJavaVersion)
+    withSourcesJar()
+    withJavadocJar()
+}
+
 tasks.withType(JavaCompile).configureEach {
-    options.encoding = "UTF-8"
-    options.release.set(21)
+    options.encoding = 'UTF-8'
+    if (targetJavaVersion >= 10 || JavaVersion.current().isJava10Compatible()) {
+        options.release.set(targetJavaVersion)
+    }
 }
 
 shadowJar {
@@ -46,48 +54,51 @@ shadowJar {
     relocate("org.json", "me.lyamray.packify.libs.json")
 }
 
+tasks.named('jar') {
+    enabled = false
+}
+
+tasks.named('assemble') {
+    dependsOn(tasks.named('shadowJar'))
+}
+
 publishing {
     publications {
         mavenJava(MavenPublication) {
 
-            artifact(tasks.shadowJar)
-            artifact(tasks.sourcesJar)
-            artifact(tasks.javadocJar)
+            artifact(tasks.named("shadowJar"))
+            artifact(tasks.named("sourcesJar"))
+            artifact(tasks.named("javadocJar"))
 
             groupId = project.group
             artifactId = project.name
             version = project.version
 
             pom {
-                name.set(project.name)
-                description.set("API to upload, get & zip images into a texturepack and send to players.")
-                url.set("https://github.com/LyamRay/Hexa-Packify")
+                name = project.name
+                description = "API to upload, get & zip images into a texturepack and send to players."
+                url = "https://github.com/LyamRay/Hexa-Packify"
 
                 licenses {
                     license {
-                        name.set("MIT License")
-                        url.set("https://opensource.org/licenses/MIT")
+                        name = "MIT License"
+                        url = "https://opensource.org/licenses/MIT"
                     }
                 }
 
                 developers {
                     developer {
-                        id.set("lyamray")
-                        name.set("LyamRay")
+                        id = "lyamray"
+                        name = "LyamRay"
                     }
                 }
 
                 scm {
-                    connection.set("scm:git:git://github.com/LyamRay/Hexa-Packify.git")
-                    developerConnection.set("scm:git:ssh://github.com/LyamRay/Hexa-Packify.git")
-                    url.set("https://github.com/LyamRay/Hexa-Packify")
+                    connection = "scm:git:git://github.com/LyamRay/Hexa-Packify.git"
+                    developerConnection = "scm:git:ssh://github.com/LyamRay/Hexa-Packify.git"
+                    url = "https://github.com/LyamRay/Hexa-Packify"
                 }
             }
         }
     }
-}
-
-tasks.build {
-    dependsOn tasks.shadowJar
-    dependsOn tasks.publishToMavenLocal
 }
