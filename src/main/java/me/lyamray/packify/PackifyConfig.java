@@ -11,13 +11,13 @@ public class PackifyConfig {
     private final String imageFolder = "images";
 
     @Builder.Default
-    private final String packName = "CustomPack";
+    private final String packName = "Hexa-Studios Resourcepack";
 
     @Builder.Default
-    private final String packDescription = "Custom Resource Pack";
+    private final String packDescription = "Powered by Hexa Studios";
 
     @Builder.Default
-    private final int packFormat = 34;
+    private final int packFormat = 75;
 
     @Builder.Default
     private final boolean replaceExisting = false;

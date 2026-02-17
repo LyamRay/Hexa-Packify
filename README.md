@@ -20,13 +20,13 @@ Built and used internally at [Hexa Studios](https://discord.gg/hexastudios).
 - Java 21+
 - Lombok (annotation processor in your plugin project)
 
-OkHttp3 and org.json are shaded into the jar — you do not need to add them yourself.
+OkHttp3 and org.json must be shaded in your plugin to avoid conflicts.
 
 ---
 
 ## Installation
 
-Add JitPack to your repositories and Packify as a dependency.
+Add JitPack to your repositories and Packify as a dependency in your **plugin project**.
 
 **build.gradle**
 ```groovy
@@ -36,13 +36,20 @@ repositories {
 }
 
 dependencies {
-    implementation 'com.github.lyamray:Hexa-Packify:1.0.0'
+    implementation 'com.github.lyamray:Hexa-Packify:b5e77dccec'
     compileOnly 'org.projectlombok:lombok:1.18.30'
     annotationProcessor 'org.projectlombok:lombok:1.18.30'
 }
+
+// Shade dependencies in your plugin to avoid conflicts
+shadowJar {
+    relocate("okhttp3", "me.yourplugin.libs.okhttp3")
+    relocate("okio", "me.yourplugin.libs.okio")
+    relocate("org.json", "me.yourplugin.libs.json")
+}
 ```
 
-Replace `1.0.0` with the version tag you want from the [releases page](https://jitpack.io/#LyamRay/Hexa-Packify).
+Replace `b5e77dccec` with the version tag you want from the [releases page](https://jitpack.io/#LyamRay/Hexa-Packify).
 
 ---
 
