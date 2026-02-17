@@ -37,10 +37,10 @@ public class Packify {
     }
 
     private Packify(JavaPlugin plugin, PackifyConfig config) {
-        this.imageHandler       = new ImageHandler(plugin, config);
-        this.structureHandler   = new StructureHandler(plugin, config);
-        this.zipHandler         = new ZipHandler(plugin, config, structureHandler);
-        this.uploadHandler      = new UploadHandler(plugin, config);
+        this.imageHandler = new ImageHandler(plugin, config);
+        this.structureHandler = new StructureHandler(plugin, config);
+        this.zipHandler = new ZipHandler(plugin, config, structureHandler);
+        this.uploadHandler = new UploadHandler(plugin, config);
         this.distributionHandler = new DistributionHandler(plugin, config);
     }
 
