@@ -1,9 +1,18 @@
 plugins {
-    id 'java'
+    id 'java-library'
+    id 'maven-publish'
+    id 'io.github.goooler.shadow' version '8.1.7'
 }
 
 group = 'me.lyamray'
-version = '1.0-SNAPSHOT'
+version = '1.0.0'
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
+    withSourcesJar()
+}
 
 repositories {
     mavenCentral()
@@ -15,15 +24,28 @@ repositories {
 
 dependencies {
     compileOnly 'io.papermc.paper:paper-api:1.21-R0.1-SNAPSHOT'
-    testImplementation platform('org.junit:junit-bom:5.10.0')
-    testImplementation 'org.junit.jupiter:junit-jupiter'
+    implementation 'com.squareup.okhttp3:okhttp:4.11.0'
+    implementation 'org.json:json:20230227'
     compileOnly 'org.projectlombok:lombok:1.18.30'
     annotationProcessor 'org.projectlombok:lombok:1.18.30'
-
-    implementation 'org.json:json:20230227'
-    implementation "com.squareup.okhttp3:okhttp:4.11.0"
 }
 
-test {
-    useJUnitPlatform()
+shadowJar {
+    relocate 'okhttp3', 'me.lyamray.packify.libs.okhttp3'
+    relocate 'okio', 'me.lyamray.packify.libs.okio'
+    relocate 'org.json', 'me.lyamray.packify.libs.json'
+    archiveClassifier.set('')
 }
+
+publishing {
+    publications {
+        shadow(MavenPublication) {
+            project.shadow.component(it)
+            groupId = project.group
+            artifactId = 'packify'
+            version = project.version
+        }
+    }
+}
+
+build.dependsOn shadowJar
