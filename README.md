@@ -2,7 +2,7 @@
 
 A lightweight Java library for Minecraft Paper plugins that handles resource pack generation and distribution. Drop images into a folder, and Packify takes care of the rest — building the pack structure, zipping it, uploading it, and sending it to players.
 
-Built and used internally at [Hexa Studios](https://hexastudios.net).
+Built and used internally at [Hexa Studios](https://discord.gg/hexastudios).
 
 ---
 
@@ -201,4 +201,4 @@ Free to use in any project. Credit appreciated but not required.
 
 ---
 
-Made by [LyamRay](https://github.com/lyamray) @ [Hexa Studios](https://hexastudios.net)
+Made by [LyamRay](https://github.com/lyamray) @ [Hexa Studios](https://discord.gg/hexastudios)
