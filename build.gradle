@@ -1,7 +1,7 @@
 plugins {
     id 'java-library'
     id 'maven-publish'
-    id 'io.github.goooler.shadow' version '8.1.7'
+    id 'com.github.johnrengelman.shadow' version '8.1.1'
 }
 
 group = 'me.lyamray'
@@ -12,40 +12,82 @@ java {
         languageVersion = JavaLanguageVersion.of(21)
     }
     withSourcesJar()
+    withJavadocJar()
 }
 
 repositories {
     mavenCentral()
     maven {
         name = "papermc-repo"
-        url = "https://repo.papermc.io/repository/maven-public/"
+        url = uri("https://repo.papermc.io/repository/maven-public/")
     }
 }
 
 dependencies {
-    compileOnly 'io.papermc.paper:paper-api:1.21-R0.1-SNAPSHOT'
-    implementation 'com.squareup.okhttp3:okhttp:4.11.0'
-    implementation 'org.json:json:20230227'
-    compileOnly 'org.projectlombok:lombok:1.18.30'
-    annotationProcessor 'org.projectlombok:lombok:1.18.30'
+    compileOnly("io.papermc.paper:paper-api:1.21-R0.1-SNAPSHOT")
+
+    implementation("com.squareup.okhttp3:okhttp:4.11.0")
+    implementation("org.json:json:20230227")
+
+    compileOnly("org.projectlombok:lombok:1.18.30")
+    annotationProcessor("org.projectlombok:lombok:1.18.30")
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = "UTF-8"
+    options.release.set(21)
 }
 
 shadowJar {
-    relocate 'okhttp3', 'me.lyamray.packify.libs.okhttp3'
-    relocate 'okio', 'me.lyamray.packify.libs.okio'
-    relocate 'org.json', 'me.lyamray.packify.libs.json'
-    archiveClassifier.set('')
+    archiveClassifier.set("")
+
+    relocate("okhttp3", "me.lyamray.packify.libs.okhttp3")
+    relocate("okio", "me.lyamray.packify.libs.okio")
+    relocate("org.json", "me.lyamray.packify.libs.json")
 }
 
 publishing {
     publications {
-        shadow(MavenPublication) {
-            project.shadow.component(it)
+        mavenJava(MavenPublication) {
+
+            artifact(tasks.shadowJar)
+            artifact(tasks.sourcesJar)
+            artifact(tasks.javadocJar)
+
             groupId = project.group
-            artifactId = 'packify'
+            artifactId = project.name
             version = project.version
+
+            pom {
+                name.set(project.name)
+                description.set("API to upload, get & zip images into a texturepack and send to players.")
+                url.set("https://github.com/LyamRay/Hexa-Packify")
+
+                licenses {
+                    license {
+                        name.set("MIT License")
+                        url.set("https://opensource.org/licenses/MIT")
+                    }
+                }
+
+                developers {
+                    developer {
+                        id.set("lyamray")
+                        name.set("LyamRay")
+                    }
+                }
+
+                scm {
+                    connection.set("scm:git:git://github.com/LyamRay/Hexa-Packify.git")
+                    developerConnection.set("scm:git:ssh://github.com/LyamRay/Hexa-Packify.git")
+                    url.set("https://github.com/LyamRay/Hexa-Packify")
+                }
+            }
         }
     }
 }
 
-build.dependsOn shadowJar
+tasks.build {
+    dependsOn tasks.shadowJar
+    dependsOn tasks.publishToMavenLocal
+}
