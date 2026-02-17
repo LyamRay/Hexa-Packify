@@ -42,7 +42,7 @@ dependencies {
 }
 ```
 
-Replace `1.0.0` with the version tag you want from the [releases page](https://github.com/lyamray/Hexa-Packify/releases).
+Replace `1.0.0` with the version tag you want from the [releases page](https://jitpack.io/#LyamRay/Hexa-Packify).
 
 ---
 
