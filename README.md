@@ -36,7 +36,7 @@ repositories {
 }
 
 dependencies {
-    implementation 'com.github.lyamray:Hexa-Packify:b5e77dccec'
+    implementation 'com.github.lyamray:Hexa-Packify:9ecb11902b'
     compileOnly 'org.projectlombok:lombok:1.18.30'
     annotationProcessor 'org.projectlombok:lombok:1.18.30'
 }
@@ -49,7 +49,7 @@ shadowJar {
 }
 ```
 
-Replace `b5e77dccec` with the version tag you want from the [releases page](https://jitpack.io/#LyamRay/Hexa-Packify).
+Replace `9ecb11902b` with the version tag you want from the [releases page](https://jitpack.io/#LyamRay/Hexa-Packify).
 
 ---
 
